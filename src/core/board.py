@@ -80,5 +80,6 @@ class Board:
             move_cost += self.costs[nr][nc]
             r, c = nr, nc
 
+
         # Kembalikan state baru di posisi ngerem
         return State(r, c, curr_target, state.path + char_dir, state.cost + move_cost)
