@@ -10,6 +10,7 @@ class Board:
         self.start_pos = None
         self.goal_pos = None
         self.max_num = -1
+        self.num_positions = {}  # mapping digit -> (r, c)
 
     def parse_input(self, filepath):
         """Membaca papan dan cost dari file txt."""
@@ -28,7 +29,10 @@ class Board:
             for j in range(self.M):
                 if row[j] == 'Z': self.start_pos = (i - 1, j)
                 elif row[j] == 'O': self.goal_pos = (i - 1, j)
-                elif row[j].isdigit(): self.max_num = max(self.max_num, int(row[j]))
+                elif row[j].isdigit():
+                    val = int(row[j])
+                    self.max_num = max(self.max_num, val)
+                    self.num_positions[val] = (i - 1, j)
 
         # Baca matriks cost
         start_idx = self.N + 1
