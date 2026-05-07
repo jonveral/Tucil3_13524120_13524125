@@ -5,10 +5,25 @@ Program solver untuk permainan **Ice Sliding Puzzle** menggunakan algoritma path
 ## Requirement
 
 - Python 3.8 atau lebih baru
+- pygame (`pip install pygame`)
 
 ## Cara Menjalankan
 
-Jalankan dari folder `src/`:
+### GUI (direkomendasikan)
+
+```
+cd src
+python main_gui.py
+```
+
+Fitur GUI:
+- Pilih file input via dialog
+- Pilih algoritma (UCS / GBFS / A*) dan heuristik (H1 / H2 / H3)
+- Playback solusi dengan tombol prev/next/play dan slider kecepatan
+- Scroll untuk zoom, klik kanan + geser untuk pan
+- Simpan solusi dan log iterasi ke folder `output/` secara otomatis
+
+### CLI
 
 ```
 cd src
@@ -56,10 +71,9 @@ Simbol pada grid:
 Heuristik untuk A*:
 | Kode | Nama | Keterangan |
 |------|------|-----------|
-| H1 | `manhattan_goal` | Manhattan distance dari aktor ke goal|
-| H2 | `manhattan_goal_angka` | Manhattan ke angka wajib          
-                               berikutnya + Manhattan ke goal |
-| H3 | `cheby` | Chebyshev distance ke goal |
+| H1 | Manhattan ke goal | Manhattan distance dari aktor ke goal |
+| H2 | Manhattan ke angka + goal | Manhattan ke angka wajib berikutnya + Manhattan ke goal |
+| H3 | Chebyshev ke goal | Chebyshev distance dari aktor ke goal |
 
 ## Struktur Repository
 
@@ -67,6 +81,7 @@ Heuristik untuk A*:
 Tucil3_13524120_13524125/
 ├── src/
 │   ├── main.py
+│   ├── main_gui.py
 │   ├── core/
 │   │   └── board.py
 │   ├── models/
@@ -82,14 +97,16 @@ Tucil3_13524120_13524125/
 │   ├── test2_lava.txt
 │   ├── test3_sequence.txt
 │   ├── test4_obstacles.txt
-│   └── test5_large.txt
+│   ├── test5_large.txt
+│   ├── test6_nolava.txt
+│   └── test7_large.txt
+├── output/
 └── doc/
-
 ```
 
 ## Author
 
 | Nama | NIM |
 |------|-----|
-| [isi sendiri] | 13524120 |
+| Jonathan Alvredo Dongun | 13524120 |
 | Muhammad Rafi Akbar | 13524125 |
