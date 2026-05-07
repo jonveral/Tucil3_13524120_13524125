@@ -26,16 +26,16 @@ def main():
     exec_time = 0.0
 
     if algo == "UCS":
-        solution, iterasi, exec_time = solve_ucs(board)
+        solution, iterasi, exec_time, _ = solve_ucs(board, record_iterasi=-1)
 
     elif algo == "GBFS":
-        solution, iterasi, exec_time = solve_gbfs(board)
+        solution, iterasi, exec_time, _ = solve_gbfs(board, record_iterasi=-1)
 
     elif algo == "A*":
         print(">> Heuristic apa yang anda pilih? (H1/H2/H3)")
         h_choice = input("   ").strip().upper()
         heuristic = HEURISTICS.get(h_choice, HEURISTICS['H1'])
-        solution, iterasi, exec_time = solve_astar(board, heuristic)
+        solution, iterasi, exec_time, _ = solve_astar(board, heuristic, record_iterasi=-1)
 
     else:
         print("Algoritma tidak dikenal.")

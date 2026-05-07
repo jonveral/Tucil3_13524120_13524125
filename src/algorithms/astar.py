@@ -25,26 +25,37 @@ HEURISTICS = {
     'H3': cheby,
 }
 
-def solve_astar(board, heuristic=manhattan_goal):
+def solve_astar(board, heuristic=manhattan_goal, record_iterasi=0):
+    """
+    record_iterasi: 0 = catat semua, N = catat tiap N iterasi, -1 = jangan catat
+    Mengembalikan (solusi_state, jumlah_iterasi, waktu_eksekusi, log_iterasi)
+    """
     start_time = time.time()
 
     r0, c0 = board.start_pos
     initial = State(r0, c0, 0, "", 0)
     h0 = heuristic(initial, board)
 
-    pq = [(h0, initial)]
+    counter = 0
+    pq = [(h0, counter, initial)]
     visited = set()
     iterasi = 0
+    log = []
     directions = [(-1, 0, 'U'), (1, 0, 'D'), (0, -1, 'L'), (0, 1, 'R')]
 
     while pq:
-        _, curr = heapq.heappop(pq)
+        _, _, curr = heapq.heappop(pq)
         iterasi += 1
+
+        if record_iterasi >= 0:
+            step = record_iterasi if record_iterasi > 0 else 1
+            if (iterasi - 1) % step == 0:
+                log.append((iterasi, (curr.r, curr.c), curr.cost, curr.path))
 
         semua_angka_selesai = (board.max_num == -1) or (curr.target_num > board.max_num)
         if (curr.r, curr.c) == board.goal_pos and semua_angka_selesai:
             waktu = (time.time() - start_time) * 1000
-            return curr, iterasi, waktu
+            return curr, iterasi, waktu, log
 
         sid = (curr.r, curr.c, curr.target_num)
         if sid in visited:
@@ -57,7 +68,8 @@ def solve_astar(board, heuristic=manhattan_goal):
                 continue
             g = next_s.cost
             h = heuristic(next_s, board)
-            heapq.heappush(pq, (g + h, next_s))
+            counter += 1
+            heapq.heappush(pq, (g + h, counter, next_s))
 
     waktu = (time.time() - start_time) * 1000
-    return None, iterasi, waktu
+    return None, iterasi, waktu, log

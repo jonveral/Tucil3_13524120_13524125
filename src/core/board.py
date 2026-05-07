@@ -16,29 +16,36 @@ class Board:
         """Membaca papan dan cost dari file txt."""
         if not os.path.exists(filepath):
             return False
-        
-        with open(filepath, 'r') as f:
-            lines = [line.strip() for line in f.readlines() if line.strip()]
-        
-        self.N, self.M = map(int, lines[0].split())
-        
-        # Baca grid map
-        for i in range(1, self.N + 1):
-            row = list(lines[i])
-            self.grid.append(row)
-            for j in range(self.M):
-                if row[j] == 'Z': self.start_pos = (i - 1, j)
-                elif row[j] == 'O': self.goal_pos = (i - 1, j)
-                elif row[j].isdigit():
-                    val = int(row[j])
-                    self.max_num = max(self.max_num, val)
-                    self.num_positions[val] = (i - 1, j)
 
-        # Baca matriks cost
-        start_idx = self.N + 1
-        for i in range(start_idx, start_idx + self.N):
-            self.costs.append(list(map(int, lines[i].split())))
-            
+        try:
+            with open(filepath, 'r') as f:
+                lines = [line.strip() for line in f.readlines() if line.strip()]
+
+            self.N, self.M = map(int, lines[0].split())
+
+            # Baca grid map
+            for i in range(1, self.N + 1):
+                row = list(lines[i])
+                self.grid.append(row)
+                for j in range(self.M):
+                    if row[j] == 'Z': self.start_pos = (i - 1, j)
+                    elif row[j] == 'O': self.goal_pos = (i - 1, j)
+                    elif row[j].isdigit():
+                        val = int(row[j])
+                        self.max_num = max(self.max_num, val)
+                        self.num_positions[val] = (i - 1, j)
+
+            # Baca matriks cost
+            start_idx = self.N + 1
+            for i in range(start_idx, start_idx + self.N):
+                self.costs.append(list(map(int, lines[i].split())))
+
+            if self.start_pos is None or self.goal_pos is None:
+                return False
+
+        except (ValueError, IndexError):
+            return False
+
         return True
 
     def is_valid_pos(self, r, c):
@@ -68,9 +75,17 @@ class Board:
 
             # Ngerem tepat sebelum batu
             if tile == 'X': break
-            
+
             # Mati kena lava
             if tile == 'L': return None
+
+            # Berhenti di goal kalau semua angka sudah selesai
+            if tile == 'O':
+                semua_selesai = (self.max_num == -1) or (curr_target > self.max_num)
+                if semua_selesai:
+                    move_cost += self.costs[nr][nc]
+                    r, c = nr, nc
+                    break
 
             # Cek urutan angka
             if tile.isdigit():
