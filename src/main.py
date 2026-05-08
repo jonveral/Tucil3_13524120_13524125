@@ -7,6 +7,8 @@ from core.board import Board
 from algorithms.ucs import solve_ucs
 from algorithms.gbfs import solve_gbfs
 from algorithms.astar import solve_astar, HEURISTICS
+from algorithms.bfs import solve_bfs
+from algorithms.dfs import solve_dfs
 from ui.playback import print_solution, run_playback, save_solution
 
 def main():
@@ -18,7 +20,7 @@ def main():
         print("Error: File tidak ditemukan atau format tidak valid.")
         return
 
-    print(">> Algoritma apa yang anda pilih? (UCS/GBFS/A*)")
+    print(">> Algoritma apa yang anda pilih? (UCS/GBFS/A*/BFS/DFS)")
     algo = input("   ").strip().upper()
 
     solution = None
@@ -36,6 +38,12 @@ def main():
         h_choice = input("   ").strip().upper()
         heuristic = HEURISTICS.get(h_choice, HEURISTICS['H1'])
         solution, iterasi, exec_time, _ = solve_astar(board, heuristic, record_iterasi=-1)
+
+    elif algo == "BFS":
+        solution, iterasi, exec_time, _ = solve_bfs(board, record_iterasi=-1)
+
+    elif algo == "DFS":
+        solution, iterasi, exec_time, _ = solve_dfs(board, record_iterasi=-1)
 
     else:
         print("Algoritma tidak dikenal.")

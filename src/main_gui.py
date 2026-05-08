@@ -10,6 +10,8 @@ from core.board import Board
 from algorithms.ucs import solve_ucs
 from algorithms.gbfs import solve_gbfs
 from algorithms.astar import solve_astar, HEURISTICS
+from algorithms.bfs import solve_bfs
+from algorithms.dfs import solve_dfs
 from ui.playback import build_steps, save_solution
 
 TILE_MIN  = 16
@@ -328,6 +330,8 @@ def main():
     tombol_ucs        = Tombol((0, 0, 1, 30), "UCS",  font_kecil, aktif=True)
     tombol_gbfs       = Tombol((0, 0, 1, 30), "GBFS", font_kecil)
     tombol_astar      = Tombol((0, 0, 1, 30), "A*",   font_kecil)
+    tombol_bfs        = Tombol((0, 0, 1, 30), "BFS",  font_kecil)
+    tombol_dfs        = Tombol((0, 0, 1, 30), "DFS",  font_kecil)
     tombol_h1         = Tombol((0, 0, 1, 28), "H1", font_kecil, aktif=True)
     tombol_h2         = Tombol((0, 0, 1, 28), "H2", font_kecil)
     tombol_h3         = Tombol((0, 0, 1, 28), "H3", font_kecil)
@@ -346,7 +350,7 @@ def main():
         win_w, win_h = screen.get_size()
         bx = win_w - SIDEBAR_W + sx
         bw = SIDEBAR_W - 2 * sx
-        w3 = (bw - 10) // 3
+        w5 = (bw - 16) // 5
         gap = 8
 
         y = 10
@@ -354,13 +358,15 @@ def main():
         tombol_pilih_file.rect = pygame.Rect(bx, y, bw, 34); y += 34 + 4
         layout['namafile_y'] = y;       y += 18 + gap
         layout['algo_label_y'] = y;     y += 16 + 4
-        tombol_ucs.rect   = pygame.Rect(bx,             y, w3, 30)
-        tombol_gbfs.rect  = pygame.Rect(bx + w3 + 5,   y, w3, 30)
-        tombol_astar.rect = pygame.Rect(bx + 2*(w3+5), y, w3, 30); y += 30 + gap
+        tombol_ucs.rect   = pygame.Rect(bx,             y, w5, 30)
+        tombol_gbfs.rect  = pygame.Rect(bx + w5 + 5,   y, w5, 30)
+        tombol_astar.rect = pygame.Rect(bx + 2*(w5+5), y, w5, 30)
+        tombol_bfs.rect   = pygame.Rect(bx + 3*(w5+5), y, w5, 30)
+        tombol_dfs.rect   = pygame.Rect(bx + 4*(w5+5), y, w5, 30); y += 30 + gap
         layout['h_label_y'] = y;        y += 16 + 4
-        tombol_h1.rect = pygame.Rect(bx,             y, w3, 28)
-        tombol_h2.rect = pygame.Rect(bx + w3 + 5,   y, w3, 28)
-        tombol_h3.rect = pygame.Rect(bx + 2*(w3+5), y, w3, 28); y += 28 + gap
+        tombol_h1.rect = pygame.Rect(bx,             y, w5, 28)
+        tombol_h2.rect = pygame.Rect(bx + w5 + 5,   y, w5, 28)
+        tombol_h3.rect = pygame.Rect(bx + 2*(w5+5), y, w5, 28); y += 28 + gap
         tombol_solve.rect = pygame.Rect(bx, y, bw, 36); y += 36 + gap
         layout['status_y'] = y
         layout['info_y']   = y + 18
@@ -383,6 +389,8 @@ def main():
         tombol_ucs.aktif   = (nama == "UCS")
         tombol_gbfs.aktif  = (nama == "GBFS")
         tombol_astar.aktif = (nama == "A*")
+        tombol_bfs.aktif   = (nama == "BFS")
+        tombol_dfs.aktif   = (nama == "DFS")
 
     def set_h(nama):
         nonlocal h_pilihan
@@ -421,7 +429,10 @@ def main():
         elif algo_pilihan == "A*":
             h = HEURISTICS.get(h_pilihan, HEURISTICS['H1'])
             solution, iterasi, exec_time, log_iterasi = solve_astar(board, h, record_iterasi=0)
-
+        elif algo_pilihan == "BFS":
+            solution, iterasi, exec_time, log_iterasi = solve_bfs(board, record_iterasi=0)
+        elif algo_pilihan == "DFS":
+            solution, iterasi, exec_time, log_iterasi = solve_dfs(board, record_iterasi=0)
         if solution:
             steps    = build_steps(board, solution)
             step_idx = 0
@@ -525,6 +536,8 @@ def main():
                 elif tombol_ucs.diklik(event):   set_algo("UCS")
                 elif tombol_gbfs.diklik(event):  set_algo("GBFS")
                 elif tombol_astar.diklik(event): set_algo("A*")
+                elif tombol_bfs.diklik(event):   set_algo("BFS")
+                elif tombol_dfs.diklik(event):   set_algo("DFS")
                 elif tombol_h1.diklik(event):    set_h("H1")
                 elif tombol_h2.diklik(event):    set_h("H2")
                 elif tombol_h3.diklik(event):    set_h("H3")
@@ -613,6 +626,8 @@ def main():
         tombol_ucs.gambar(screen, mouse_pos)
         tombol_gbfs.gambar(screen, mouse_pos)
         tombol_astar.gambar(screen, mouse_pos)
+        tombol_bfs.gambar(screen, mouse_pos)
+        tombol_dfs.gambar(screen, mouse_pos)
 
         if algo_pilihan == "A*":
             screen.blit(font_kecil.render("Heuristik:", True, WARNA_TEKS_DIM), (bx, layout['h_label_y']))
