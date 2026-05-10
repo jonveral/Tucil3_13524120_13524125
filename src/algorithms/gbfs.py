@@ -6,10 +6,7 @@ def heuristic_manhattan(state, board):
     return abs(state.r - board.goal_pos[0]) + abs(state.c - board.goal_pos[1])
 
 def solve_gbfs(board, heuristic=heuristic_manhattan, record_iterasi=0):
-    """
-    record_iterasi: 0 = catat semua, N = catat tiap N iterasi, -1 = jangan catat
-    Mengembalikan (solusi_state, jumlah_iterasi, waktu_eksekusi, log_iterasi)
-    """
+  
     start_time = time.time()
     initial_state = State(board.start_pos[0], board.start_pos[1], 0, "", 0)
     h = heuristic(initial_state, board)

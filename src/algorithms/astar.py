@@ -26,10 +26,6 @@ HEURISTICS = {
 }
 
 def solve_astar(board, heuristic=manhattan_goal, record_iterasi=0):
-    """
-    record_iterasi: 0 = catat semua, N = catat tiap N iterasi, -1 = jangan catat
-    Mengembalikan (solusi_state, jumlah_iterasi, waktu_eksekusi, log_iterasi)
-    """
     start_time = time.time()
 
     r0, c0 = board.start_pos

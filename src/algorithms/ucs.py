@@ -3,12 +3,7 @@ import time
 from models.state import State
 
 def solve_ucs(board, record_iterasi=0):
-    """
-    Menjalankan Uniform Cost Search (UCS).
-    record_iterasi: 0 = catat semua, N = catat tiap N iterasi, -1 = jangan catat
-    Mengembalikan (solusi_state, jumlah_iterasi, waktu_eksekusi, log_iterasi)
-    log_iterasi: list of (nomor_iterasi, (r, c), cost, path)
-    """
+
     start_time = time.time()
 
     initial_state = State(board.start_pos[0], board.start_pos[1], 0, "", 0)

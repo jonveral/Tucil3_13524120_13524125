@@ -13,7 +13,6 @@ class Board:
         self.num_positions = {}  # mapping digit -> (r, c)
 
     def parse_input(self, filepath):
-        """Membaca papan dan cost dari file txt."""
         if not os.path.exists(filepath):
             return False
 
@@ -52,16 +51,14 @@ class Board:
         return 0 <= r < self.N and 0 <= c < self.M
 
     def slide(self, state, direction):
-        """
-        Simulator pergerakan es yang licin.
-        direction: (delta_row, delta_col, 'Arah')
-        """
+
+        # direction: (delta_row, delta_col, 'Arah')
         dr, dc, char_dir = direction
         r, c = state.r, state.c
         curr_target = state.target_num
         move_cost = 0
 
-        # Cek kalau langsung mentok batu di sebelah
+        # Cek kalau langsung mentok batu
         if self.is_valid_pos(r + dr, c + dc) and self.grid[r + dr][c + dc] == 'X':
             return None
 
@@ -70,16 +67,9 @@ class Board:
 
             # Jatuh keluar arena
             if not self.is_valid_pos(nr, nc): return None
-            
             tile = self.grid[nr][nc]
-
-            # Ngerem tepat sebelum batu
             if tile == 'X': break
-
-            # Mati kena lava
             if tile == 'L': return None
-
-            # Berhenti di goal kalau semua angka sudah selesai
             if tile == 'O':
                 semua_selesai = (self.max_num == -1) or (curr_target > self.max_num)
                 if semua_selesai:

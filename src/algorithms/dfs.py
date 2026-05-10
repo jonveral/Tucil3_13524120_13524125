@@ -9,7 +9,7 @@ def solve_dfs(board, record_iterasi=0):
     visited = set()
     iterasi = 0
     log = []
-    # Dibalik agar 'U' diproses pertama (karena stack mengambil dari belakang)
+    # Dibalik agar 'U' diproses pertama ( stack mengambil dari belakang)
     directions = [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]
 
     while stack:
