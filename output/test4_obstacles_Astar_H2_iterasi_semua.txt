@@ -1,0 +1,5 @@
+Log Iterasi - A*
+
+Iterasi 1: pos=(1,1)  cost=0  path=
+Iterasi 2: pos=(1,6)  cost=20  path=R
+Iterasi 3: pos=(3,6)  cost=23  path=RD

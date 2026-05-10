@@ -1,0 +1,26 @@
+Solusi Yang Ditemukan : RD
+Cost dari Solusi      : 12
+
+Initial
+XXXXX
+XZ**X
+X***X
+X**OX
+XXXXX
+
+Step 1 : R
+XXXXX
+X**ZX
+X***X
+X**OX
+XXXXX
+
+Step 2 : D
+XXXXX
+X***X
+X***X
+X**ZX
+XXXXX
+
+Waktu eksekusi: 0.00 ms
+Banyak iterasi: 5 iterasi

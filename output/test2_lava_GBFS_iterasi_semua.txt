@@ -1,0 +1,5 @@
+Log Iterasi - GBFS
+
+Iterasi 1: pos=(1,1)  cost=0  path=
+Iterasi 2: pos=(1,5)  cost=14  path=R
+Iterasi 3: pos=(3,5)  cost=24  path=RD
