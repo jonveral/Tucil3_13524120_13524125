@@ -1,0 +1,7 @@
+Log Iterasi - UCS
+
+Iterasi 1: pos=(1,1)  cost=0  path=
+Iterasi 2: pos=(1,3)  cost=5  path=R
+Iterasi 3: pos=(1,1)  cost=8  path=RL
+Iterasi 4: pos=(3,1)  cost=11  path=D
+Iterasi 5: pos=(3,3)  cost=12  path=RD

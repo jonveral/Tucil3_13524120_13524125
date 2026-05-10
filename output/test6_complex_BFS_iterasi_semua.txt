@@ -1,0 +1,8 @@
+Log Iterasi - BFS
+
+Iterasi 1: pos=(1,1)  cost=0  path=
+Iterasi 2: pos=(10,1)  cost=9  path=D
+Iterasi 3: pos=(1,13)  cost=108  path=R
+Iterasi 4: pos=(1,1)  cost=18  path=DU
+Iterasi 5: pos=(10,6)  cost=14  path=DR
+Iterasi 6: pos=(10,13)  cost=189  path=RD

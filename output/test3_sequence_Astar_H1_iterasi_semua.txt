@@ -1,0 +1,22 @@
+Log Iterasi - A*
+
+Iterasi 1: pos=(5,1)  cost=0  path=
+Iterasi 2: pos=(5,3)  cost=7  path=R
+Iterasi 3: pos=(3,3)  cost=17  path=RU
+Iterasi 4: pos=(5,1)  cost=19  path=RL
+Iterasi 5: pos=(3,5)  cost=26  path=RUR
+Iterasi 6: pos=(3,1)  cost=27  path=RUL
+Iterasi 7: pos=(5,3)  cost=28  path=RUD
+Iterasi 8: pos=(1,5)  cost=36  path=RURU
+Iterasi 9: pos=(1,1)  cost=37  path=RULU
+Iterasi 10: pos=(3,5)  cost=47  path=RULR
+Iterasi 11: pos=(3,1)  cost=44  path=RURL
+Iterasi 12: pos=(1,5)  cost=53  path=RULUR
+Iterasi 13: pos=(1,1)  cost=54  path=RURUL
+Iterasi 14: pos=(5,1)  cost=61  path=RULUD
+Iterasi 15: pos=(5,3)  cost=68  path=RULUDR
+Iterasi 16: pos=(1,1)  cost=71  path=RULURL
+Iterasi 17: pos=(3,3)  cost=78  path=RULUDRU
+Iterasi 18: pos=(1,1)  cost=79  path=RULUDU
+Iterasi 19: pos=(5,1)  cost=80  path=RULUDRL
+Iterasi 20: pos=(3,5)  cost=87  path=RULUDRUR
