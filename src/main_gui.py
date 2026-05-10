@@ -35,8 +35,6 @@ WARNA_TEKS_DIM     = (140, 140, 160)
 WARNA_TOMBOL       = (60, 90, 160)
 WARNA_TOMBOL_HOVER = (80, 120, 200)
 WARNA_TOMBOL_AKTIF = (40, 160, 100)
-WARNA_SLIDER       = (80, 80, 120)
-WARNA_SLIDER_THUMB = (140, 140, 200)
 WARNA_AKTOR        = (50, 120, 220)
 
 def load_assets(asset_dir, tile_size):
@@ -108,8 +106,8 @@ def gambar_tile(surface, assets, tile, r, c, off_x, off_y, tile_size):
             pygame.draw.rect(surface, WARNA['O'],
                              pygame.Rect(x + pad, y + pad, tile_size - pad*2, tile_size - pad*2))
     elif tile.isdigit():
-        font = pygame.font.SysFont('Arial', max(8, tile_size // 2), bold=True)
-        label = font.render(tile, True, WARNA_ANGKA)
+        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '..', 'assets', 'Minecraft.ttf'), max(8, tile_size // 2))
+        label = font.render(tile, False, WARNA_ANGKA)
         surface.blit(label, (x + (tile_size - label.get_width()) // 2,
                              y + (tile_size - label.get_height()) // 2))
 
@@ -143,7 +141,7 @@ class Tombol:
         hover = self.rect.collidepoint(mouse_pos)
         warna = WARNA_TOMBOL_AKTIF if self.aktif else (WARNA_TOMBOL_HOVER if hover else WARNA_TOMBOL)
         pygame.draw.rect(surface, warna, self.rect, border_radius=6)
-        label = self.font.render(self.teks, True, WARNA_TEKS)
+        label = self.font.render(self.teks, False, WARNA_TEKS)
         surface.blit(label, (self.rect.x + (self.rect.w - label.get_width()) // 2,
                              self.rect.y + (self.rect.h - label.get_height()) // 2))
 
@@ -151,37 +149,6 @@ class Tombol:
         return (event.type == pygame.MOUSEBUTTONDOWN and
                 event.button == 1 and self.rect.collidepoint(event.pos))
 
-class Slider:
-    def __init__(self, x, y, lebar, min_val, max_val, val):
-        self.x = x
-        self.y = y
-        self.lebar = lebar
-        self.min_val = min_val
-        self.max_val = max_val
-        self.val = val
-        self.dragging = False
-
-    @property
-    def thumb_x(self):
-        if self.max_val == self.min_val:
-            return self.x
-        frac = (self.val - self.min_val) / (self.max_val - self.min_val)
-        return int(self.x + frac * self.lebar)
-
-    def gambar(self, surface):
-        pygame.draw.rect(surface, WARNA_SLIDER,
-                         pygame.Rect(self.x, self.y - 3, self.lebar, 6), border_radius=3)
-        pygame.draw.circle(surface, WARNA_SLIDER_THUMB, (self.thumb_x, self.y), 9)
-
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if (event.pos[0] - self.thumb_x)**2 + (event.pos[1] - self.y)**2 <= 81:
-                self.dragging = True
-        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            self.dragging = False
-        elif event.type == pygame.MOUSEMOTION and self.dragging:
-            frac = max(0.0, min(1.0, (event.pos[0] - self.x) / self.lebar))
-            self.val = self.min_val + frac * (self.max_val - self.min_val)
 
 def pilih_file():
     root = tk.Tk()
@@ -289,9 +256,10 @@ def main():
     output_dir = os.path.join(src_dir, '..', 'output')
     os.makedirs(output_dir, exist_ok=True)
 
-    font_kecil  = pygame.font.SysFont('Arial', 13)
-    font_sedang = pygame.font.SysFont('Arial', 15, bold=True)
-    font_besar  = pygame.font.SysFont('Arial', 18, bold=True)
+    font_path   = os.path.join(asset_dir, 'Minecraft.ttf')
+    font_kecil  = pygame.font.Font(font_path, 10)
+    font_sedang = pygame.font.Font(font_path, 12)
+    font_besar  = pygame.font.Font(font_path, 14)
 
     board           = None
     filepath        = ""
@@ -341,7 +309,7 @@ def main():
     tombol_prev       = Tombol((0, 0, 40, 30), "<", font_sedang)
     tombol_next       = Tombol((0, 0, 40, 30), ">", font_sedang)
     tombol_play       = Tombol((0, 0, 1, 30), "Play", font_kecil)
-    slider_kecepatan  = Slider(0, 0, 1, 0.5, 5.0, 1.5)
+    KECEPATAN_PLAY    = 1.5
 
     clock  = pygame.time.Clock()
     layout = {}
@@ -375,9 +343,6 @@ def main():
         tombol_prev.rect = pygame.Rect(bx, pb_y, 40, 30)
         tombol_next.rect = pygame.Rect(bx + bw - 40, pb_y, 40, 30)
         tombol_play.rect = pygame.Rect(bx + 45, pb_y, bw - 90, 30)
-        slider_kecepatan.x     = bx
-        slider_kecepatan.y     = win_h - 70
-        slider_kecepatan.lebar = bw
         tombol_save.rect      = pygame.Rect(bx, win_h - 72, bw, 30)
         tombol_save_iter.rect = pygame.Rect(bx, win_h - 36, bw, 30)
         layout['bx'] = bx
@@ -452,7 +417,7 @@ def main():
 
         if auto_play and steps and step_idx < len(steps) - 1:
             auto_play_timer += dt
-            if auto_play_timer >= 1.0 / slider_kecepatan.val:
+            if auto_play_timer >= 1.0 / KECEPATAN_PLAY:
                 auto_play_timer = 0.0
                 step_idx += 1
                 if step_idx >= len(steps) - 1:
@@ -506,7 +471,6 @@ def main():
                     pan_x = pan_start[0] + dx
                     pan_y = pan_start[1] + dy
 
-            slider_kecepatan.handle_event(event)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if tombol_pilih_file.diklik(event):
@@ -600,10 +564,10 @@ def main():
             gambar_papan(screen, assets, board, off_x, off_y, tile_size)
             gambar_aktor(screen, assets, aktor_px, tile_size)
 
-            hint = font_kecil.render("Scroll: zoom  |  Klik kanan + geser: pan", True, WARNA_TEKS_DIM)
+            hint = font_kecil.render("Scroll: zoom  |  Klik kanan + geser: pan", False, WARNA_TEKS_DIM)
             screen.blit(hint, (8, win_h - hint.get_height() - 6))
         else:
-            teks = font_besar.render("Pilih file input di sidebar kanan", True, WARNA_TEKS_DIM)
+            teks = font_besar.render("Pilih file input di sidebar kanan", False, WARNA_TEKS_DIM)
             screen.blit(teks, (area_w // 2 - teks.get_width() // 2,
                                win_h // 2 - teks.get_height() // 2))
 
@@ -614,15 +578,15 @@ def main():
         bx = layout['bx']
         bw = layout['bw']
 
-        judul = font_besar.render("Ice Sliding Puzzle", True, WARNA_TEKS)
+        judul = font_besar.render("Ice Sliding Puzzle", False, WARNA_TEKS)
         screen.blit(judul, (area_w + (SIDEBAR_W - judul.get_width()) // 2, layout['judul_y']))
 
         tombol_pilih_file.gambar(screen, mouse_pos)
 
         nama_tampil = os.path.basename(filepath) if filepath else "-"
-        screen.blit(font_kecil.render(nama_tampil, True, WARNA_TEKS_DIM), (bx, layout['namafile_y']))
+        screen.blit(font_kecil.render(nama_tampil, False, WARNA_TEKS_DIM), (bx, layout['namafile_y']))
 
-        screen.blit(font_kecil.render("Algoritma:", True, WARNA_TEKS_DIM), (bx, layout['algo_label_y']))
+        screen.blit(font_kecil.render("Algoritma:", False, WARNA_TEKS_DIM), (bx, layout['algo_label_y']))
         tombol_ucs.gambar(screen, mouse_pos)
         tombol_gbfs.gambar(screen, mouse_pos)
         tombol_astar.gambar(screen, mouse_pos)
@@ -630,20 +594,20 @@ def main():
         tombol_dfs.gambar(screen, mouse_pos)
 
         if algo_pilihan == "A*":
-            screen.blit(font_kecil.render("Heuristik:", True, WARNA_TEKS_DIM), (bx, layout['h_label_y']))
+            screen.blit(font_kecil.render("Heuristik:", False, WARNA_TEKS_DIM), (bx, layout['h_label_y']))
             tombol_h1.gambar(screen, mouse_pos)
             tombol_h2.gambar(screen, mouse_pos)
             tombol_h3.gambar(screen, mouse_pos)
 
         tombol_solve.gambar(screen, mouse_pos)
-        screen.blit(font_kecil.render(pesan_status, True, WARNA_TEKS), (bx, layout['status_y']))
+        screen.blit(font_kecil.render(pesan_status, False, WARNA_TEKS), (bx, layout['status_y']))
 
         if solution:
             y = layout['info_y']
             def info(lbl, val):
                 nonlocal y
-                screen.blit(font_kecil.render(lbl, True, WARNA_TEKS_DIM), (bx, y))
-                screen.blit(font_kecil.render(str(val), True, WARNA_TEKS), (bx + 95, y))
+                screen.blit(font_kecil.render(lbl, False, WARNA_TEKS_DIM), (bx, y))
+                screen.blit(font_kecil.render(str(val), False, WARNA_TEKS), (bx + 95, y))
                 y += 18
 
             info("Algoritma :", algo_pilihan + (f" ({h_pilihan})" if algo_pilihan == "A*" else ""))
@@ -657,7 +621,7 @@ def main():
             maks = bw // 9
             if len(path_str) > maks:
                 path_str = path_str[:maks - 3] + "..."
-            screen.blit(font_kecil.render(path_str, True, WARNA_ANGKA), (bx, y))
+            screen.blit(font_kecil.render(path_str, False, WARNA_ANGKA), (bx, y))
             y += 20
 
             if steps:
@@ -665,16 +629,13 @@ def main():
                 info_step = f"Step {step_idx}/{len(steps)-1}"
                 if step_idx > 0:
                     info_step += f"  ({lbl_step})"
-                screen.blit(font_sedang.render(info_step, True, WARNA_TEKS), (bx, y + 5))
+                screen.blit(font_sedang.render(info_step, False, WARNA_TEKS), (bx, y + 5))
 
         if steps:
             tombol_prev.gambar(screen, mouse_pos)
             tombol_play.teks = "Pause" if auto_play else "Play"
             tombol_play.gambar(screen, mouse_pos)
             tombol_next.gambar(screen, mouse_pos)
-            screen.blit(font_kecil.render(f"Kecepatan: {slider_kecepatan.val:.1f}x/s",
-                                          True, WARNA_TEKS_DIM), (bx, win_h - 90))
-            slider_kecepatan.gambar(screen)
 
         if solution:
             tombol_save.gambar(screen, mouse_pos)
